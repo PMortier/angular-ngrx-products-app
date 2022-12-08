@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { catchError, map, mergeMap, Observable, of } from "rxjs";
 import { ProductsService } from "../services/products.service";
-import { GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, ProductsActions, ProductsActionsTypes, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess } from "./products.actions";
+import { DeleteProductActionError, DeleteProductActionSuccess, GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, ProductsActions, ProductsActionsTypes, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess } from "./products.actions";
 
 @Injectable()
 export class ProductsEffects {
@@ -54,6 +54,18 @@ export class ProductsEffects {
             .pipe(
                 map((product)=> new SelectProductActionSuccess(product)),
                 catchError((err)=>of(new SelectProductActionError(err.message)))
+            )
+        })
+    ));
+
+    // Delete product Effect
+    deleteProductEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.DELETE_PRODUCT),
+        mergeMap((action:ProductsActions)=>{
+            return this.productsService.delete(action.payload.id)
+            .pipe(
+                map(()=> new DeleteProductActionSuccess(action.payload)),
+                catchError((err)=>of(new DeleteProductActionError(err.message)))
             )
         })
     ));
