@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { catchError, map, mergeMap, Observable, of } from "rxjs";
 import { ProductsService } from "../services/products.service";
-import { GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, ProductsActionsTypes } from "./products.actions";
+import { GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, ProductsActions, ProductsActionsTypes, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess } from "./products.actions";
 
 @Injectable()
 export class ProductsEffects {
@@ -11,9 +11,9 @@ export class ProductsEffects {
     }
 
     // Get all products
-    getAllProductsEffect:Observable<Action> = createEffect(()=>this.effectActions.pipe(
+    getAllProductsEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
         ofType(ProductsActionsTypes.GET_ALL_PRODUCTS),
-        mergeMap((action)=>{
+        mergeMap((action:ProductsActions)=>{
             return this.productsService.getProducts()
             .pipe(
                 map((products)=> new GetAllProductsActionSuccess(products)),
@@ -23,13 +23,37 @@ export class ProductsEffects {
     ));
 
     // Get selected products
-    getSelectedProductsEffect:Observable<Action> = createEffect(()=>this.effectActions.pipe(
+    getSelectedProductsEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
         ofType(ProductsActionsTypes.GET_SELECTED_PRODUCTS),
-        mergeMap((action)=>{
+        mergeMap((action:ProductsActions)=>{
             return this.productsService.getSelectedProducts()
             .pipe(
                 map((products)=> new GetSelectedProductsActionSuccess(products)),
                 catchError((err)=>of(new GetSelectedProductsActionError(err.message)))
+            )
+        })
+    ));
+
+    // Search products Effect
+    searchProductsEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.SEARCH_PRODUCTS),
+        mergeMap((action:ProductsActions)=>{
+            return this.productsService.searchProducts(action.payload)
+            .pipe(
+                map((products)=> new SearchProductsActionSuccess(products)),
+                catchError((err)=>of(new SearchProductsActionError(err.message)))
+            )
+        })
+    ));
+
+    // Select product Effect
+    selectProductEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.SELECT_PRODUCT),
+        mergeMap((action:ProductsActions)=>{
+            return this.productsService.setSelected(action.payload)
+            .pipe(
+                map((product)=> new SelectProductActionSuccess(product)),
+                catchError((err)=>of(new SelectProductActionError(err.message)))
             )
         })
     ));

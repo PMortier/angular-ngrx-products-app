@@ -32,8 +32,7 @@ export class ProductsService {
 
   public setSelected(product:Product):Observable<Product>{
     let host = environment.host;
-    product.selected=!product.selected
-    return this.http.put<Product>(host+"/products/"+product.id, product);
+    return this.http.put<Product>(host+"/products/"+product.id, {...product,selected:!product.selected});
   }
 
   public delete(id:number):Observable<void>{
