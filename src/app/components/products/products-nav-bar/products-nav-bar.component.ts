@@ -12,4 +12,12 @@ export class ProductsNavBarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onGetAllProducts(){
+
+  }
+
+  onGetSelectedProducts(){
+
+  }
+
 }
