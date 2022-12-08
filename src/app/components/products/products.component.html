@@ -8,7 +8,7 @@
             <div class="p-2">Loading...</div>
         </ng-container>
         <ng-container *ngSwitchCase="ProductsStateEnum.ERROR">
-            <div class="p-2 text-danger">{{state.errorMessage}}</div>
+            <div class="p-2 text-danger">{{state.errorMessage | json}}</div>
         </ng-container>
         <ng-container *ngSwitchCase="ProductsStateEnum.LOADED">
             <table class="table">
