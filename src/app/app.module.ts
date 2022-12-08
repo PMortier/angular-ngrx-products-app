@@ -11,12 +11,14 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { productsReducer } from './ngrx/products.reducer';
 import { ProductsEffects } from './ngrx/products.effects';
+import { ProductsListComponent } from './components/products/products-list/products-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ProductsComponent,
-    ProductsNavBarComponent
+    ProductsNavBarComponent,
+    ProductsListComponent
   ],
   imports: [
     BrowserModule,
