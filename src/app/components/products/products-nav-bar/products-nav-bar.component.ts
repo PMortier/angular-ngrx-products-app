@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { GetAllProductsAction, GetSelectedProductsAction, SearchProductsAction } from 'src/app/ngrx/products.actions';
+import { GetAllProductsAction, GetSelectedProductsAction, ProductsActionsTypes, SearchProductsAction } from 'src/app/ngrx/products.actions';
+import { ProductsState } from 'src/app/ngrx/products.reducer';
 
 @Component({
   selector: 'app-products-nav-bar',
@@ -9,10 +10,15 @@ import { GetAllProductsAction, GetSelectedProductsAction, SearchProductsAction }
   styleUrls: ['./products-nav-bar.component.css']
 })
 export class ProductsNavBarComponent implements OnInit {
+  state:ProductsState|null=null;
+  readonly ProductsActionsTypes = ProductsActionsTypes
 
   constructor(private store:Store<any>, private router:Router) { }
 
   ngOnInit(): void {
+    this.store.subscribe(state=>{
+      this.state = state.catalogState;
+    })
   }
 
   onGetAllProducts(){
