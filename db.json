@@ -23,6 +23,14 @@
       "quantity": 100,
       "selected": false,
       "available": true
+    },
+    {
+      "name": "Printer",
+      "price": "300",
+      "quantity": "200",
+      "selected": true,
+      "available": true,
+      "id": 4
     }
   ]
 }

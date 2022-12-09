@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { catchError, map, mergeMap, Observable, of } from "rxjs";
 import { ProductsService } from "../services/products.service";
-import { DeleteProductActionError, DeleteProductActionSuccess, GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, ProductsActions, ProductsActionsTypes, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess } from "./products.actions";
+import { DeleteProductActionError, DeleteProductActionSuccess, GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, NewProductActionSuccess, ProductsActions, ProductsActionsTypes, SaveProductActionError, SaveProductActionSuccess, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess } from "./products.actions";
 
 @Injectable()
 export class ProductsEffects {
@@ -66,6 +66,26 @@ export class ProductsEffects {
             .pipe(
                 map(()=> new DeleteProductActionSuccess(action.payload)),
                 catchError((err)=>of(new DeleteProductActionError(err.message)))
+            )
+        })
+    ));
+
+    // New product Effect
+    newProductEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.NEW_PRODUCT),
+        map((action:ProductsActions)=>{
+            return new NewProductActionSuccess({});
+        })
+    ));
+
+    // Save product Effect
+    saveProductEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.SAVE_PRODUCT),
+        mergeMap((action:ProductsActions)=>{
+            return this.productsService.save(action.payload)
+            .pipe(
+                map((product)=> new SaveProductActionSuccess(product)),
+                catchError((err)=>of(new SaveProductActionError(err.message)))
             )
         })
     ));
