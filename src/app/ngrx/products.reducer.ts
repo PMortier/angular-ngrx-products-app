@@ -8,19 +8,22 @@ export enum ProductsStateEnum{
     ERROR="Error",
     INITIAL="Initial",
     NEW="New",
-    EDIT="Edit"
+    EDIT="Edit",
+    UPDATED="Updated"
 }
 
 export interface ProductsState{
     products:Product[],
     errorMessage:string,
     dataState:ProductsStateEnum
+    currentProduct:Product|null;
 }
 
 const initState:ProductsState={
     products:[],
     errorMessage:"",
-    dataState:ProductsStateEnum.INITIAL
+    dataState:ProductsStateEnum.INITIAL,
+    currentProduct:null,
 }
 
 export function productsReducer(state:ProductsState=initState, action:Action):ProductsState{
@@ -82,6 +85,22 @@ export function productsReducer(state:ProductsState=initState, action:Action):Pr
             prods.push((<ProductsActions>action).payload);
             return {...state, dataState:ProductsStateEnum.LOADED, products:prods}
         case ProductsActionsTypes.SAVE_PRODUCT_ERROR :
+            return {...state, dataState:ProductsStateEnum.ERROR, errorMessage:(<ProductsActions>action).payload}
+        // Edit product
+        case ProductsActionsTypes.EDIT_PRODUCT :
+            return {...state, dataState:ProductsStateEnum.LOADING }
+        case ProductsActionsTypes.EDIT_PRODUCT_SUCCESS :
+            return {...state, dataState:ProductsStateEnum.LOADED, currentProduct:(<ProductsActions>action).payload}
+        case ProductsActionsTypes.EDIT_PRODUCT_ERROR :
+            return {...state, dataState:ProductsStateEnum.ERROR, errorMessage:(<ProductsActions>action).payload}
+        // Update product
+        case ProductsActionsTypes.UPDATE_PRODUCT :
+            return {...state, dataState:ProductsStateEnum.LOADING }
+        case ProductsActionsTypes.UPDATE_PRODUCT_SUCCESS :
+            let updatedProduct:Product=(<ProductsActions>action).payload;
+            let updatedProducts:Product[]=state.products.map(p=>(p.id==updatedProduct.id)?updatedProduct:p);
+            return {...state, dataState:ProductsStateEnum.UPDATED, products:updatedProducts}
+        case ProductsActionsTypes.UPDATE_PRODUCT_ERROR :
             return {...state, dataState:ProductsStateEnum.ERROR, errorMessage:(<ProductsActions>action).payload}
 
         default : return {...state}

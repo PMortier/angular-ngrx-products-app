@@ -30,6 +30,14 @@ export enum ProductsActionsTypes{
     SAVE_PRODUCT="[Product] Save product",
     SAVE_PRODUCT_SUCCESS="[Product] Save product success",
     SAVE_PRODUCT_ERROR="[Product] Save product error",
+    // Edit product
+    EDIT_PRODUCT="[Product] Edit product",
+    EDIT_PRODUCT_SUCCESS="[Product] Edit product success",
+    EDIT_PRODUCT_ERROR="[Product] Edit product error",
+    // Update product
+    UPDATE_PRODUCT="[Product] Update product",
+    UPDATE_PRODUCT_SUCCESS="[Product] Update product success",
+    UPDATE_PRODUCT_ERROR="[Product] Update product error",
 }
 
 // Get all products actions
@@ -172,6 +180,46 @@ export class SaveProductActionError implements Action{
   }
 }
 
+// Edit product actions
+
+export class EditProductAction implements Action{
+  type: ProductsActionsTypes=ProductsActionsTypes.EDIT_PRODUCT;
+  constructor(public payload:number){
+  }
+}
+
+export class EditProductActionSuccess implements Action{
+  type: ProductsActionsTypes=ProductsActionsTypes.EDIT_PRODUCT_SUCCESS;
+  constructor(public payload:Product){
+  }
+}
+
+export class EditProductActionError implements Action{
+  type: ProductsActionsTypes=ProductsActionsTypes.EDIT_PRODUCT_ERROR;
+  constructor(public payload:string){
+  }
+}
+
+// Update product actions
+
+export class UpdateProductAction implements Action{
+  type: ProductsActionsTypes=ProductsActionsTypes.UPDATE_PRODUCT;
+  constructor(public payload:Product){
+  }
+}
+
+export class UpdateProductActionSuccess implements Action{
+  type: ProductsActionsTypes=ProductsActionsTypes.UPDATE_PRODUCT_SUCCESS;
+  constructor(public payload:Product){
+  }
+}
+
+export class UpdateProductActionError implements Action{
+  type: ProductsActionsTypes=ProductsActionsTypes.UPDATE_PRODUCT_ERROR;
+  constructor(public payload:string){
+  }
+}
+
 export type ProductsActions =
   GetAllProductsAction | GetAllProductsActionSuccess | GetAllProductsActionError
   | GetSelectedProductsAction | GetSelectedProductsActionSuccess | GetSelectedProductsActionError
@@ -179,4 +227,7 @@ export type ProductsActions =
   | SelectProductAction | SelectProductActionSuccess | SelectProductActionError
   | DeleteProductAction | DeleteProductActionSuccess | DeleteProductActionError
   | NewProductAction | NewProductActionSuccess | NewProductActionError
+  | SaveProductAction | SaveProductActionSuccess | SaveProductActionError
+  | EditProductAction | EditProductActionSuccess | EditProductActionError
+  | UpdateProductAction | UpdateProductActionSuccess | UpdateProductActionError
   ;

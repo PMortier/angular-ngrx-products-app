@@ -1,17 +1,24 @@
 <div class="container">
-    <ng-container *ngIf="productFormGroup">
-        <ng-container *ngIf="state as data">
-            <ng-container *ngIf="data.dataState==ProductsStateEnum.LOADING">
-                Loading...
-            </ng-container>
-            <ng-container *ngIf="data.dataState==ProductsStateEnum.LOADED">
-                <div class="alert-success container p-3 m-3">
-                    <span>Product saved successfully</span>
-                    <button class="btn btn-success ml-3" (click)="newProduct()">New Product</button>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="data.dataState==ProductsStateEnum.NEW">
-                <form [formGroup]="productFormGroup" (ngSubmit)="onSaveProduct()">
+    <ng-container *ngIf="state">
+        <ng-container *ngIf="state.dataState==ProductsStateEnum.LOADING">
+            Loading...
+        </ng-container>
+        <ng-container *ngIf="state.dataState==ProductsStateEnum.ERROR">
+            {{state.errorMessage}}
+        </ng-container>
+        <ng-container *ngIf="state.dataState==ProductsStateEnum.UPDATED">
+            <div class="alert-success container p-3 m-3">
+                <span>Product updated successfully</span>
+                <button class="btn btn-success ml-3" (click)="okUpdated()">OK</button>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="state.dataState==ProductsStateEnum.LOADED">
+            <ng-container *ngIf="formBuilt">
+                <form *ngIf="productFormGroup" [formGroup]="productFormGroup" (ngSubmit)="onUpdateProduct()">
+                    <div class="form-group">
+                        <label>ID : {{productFormGroup.controls['id'].value}}</label>
+                        <input type="hidden" formControlName="id" id="id">
+                    </div>
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" class="form-control" formControlName="name" id="name"
@@ -36,12 +43,10 @@
                         <label for="available">Available</label>
                         <input type="checkbox" formControlName="available" class="form-check" id="available">
                     </div>
-                    <button class="btn btn-success" (click)="onSaveProduct()">Save</button>
+                    <button type="submit" class="btn btn-success">Save</button>
                 </form>
             </ng-container>
-
         </ng-container>
-
     </ng-container>
-</div>
 
+</div>

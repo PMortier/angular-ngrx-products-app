@@ -3,7 +3,7 @@ import { Actions, createEffect, ofType } from "@ngrx/effects";
 import { Action } from "@ngrx/store";
 import { catchError, map, mergeMap, Observable, of } from "rxjs";
 import { ProductsService } from "../services/products.service";
-import { DeleteProductActionError, DeleteProductActionSuccess, GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, NewProductActionSuccess, ProductsActions, ProductsActionsTypes, SaveProductActionError, SaveProductActionSuccess, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess } from "./products.actions";
+import { DeleteProductActionError, DeleteProductActionSuccess, EditProductActionError, EditProductActionSuccess, GetAllProductsActionError, GetAllProductsActionSuccess, GetSelectedProductsActionError, GetSelectedProductsActionSuccess, NewProductActionSuccess, ProductsActions, ProductsActionsTypes, SaveProductActionError, SaveProductActionSuccess, SearchProductsActionError, SearchProductsActionSuccess, SelectProductActionError, SelectProductActionSuccess, UpdateProductActionError, UpdateProductActionSuccess } from "./products.actions";
 
 @Injectable()
 export class ProductsEffects {
@@ -86,6 +86,30 @@ export class ProductsEffects {
             .pipe(
                 map((product)=> new SaveProductActionSuccess(product)),
                 catchError((err)=>of(new SaveProductActionError(err.message)))
+            )
+        })
+    ));
+
+    // Edit product Effect
+    editProductEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.EDIT_PRODUCT),
+        mergeMap((action:ProductsActions)=>{
+            return this.productsService.getProductById(action.payload)
+            .pipe(
+                map((product)=> new EditProductActionSuccess(product)),
+                catchError((err)=>of(new EditProductActionError(err.message)))
+            )
+        })
+    ));
+
+    // Update product Effect
+    updateProductEffect:Observable<ProductsActions> = createEffect(()=>this.effectActions.pipe(
+        ofType(ProductsActionsTypes.UPDATE_PRODUCT),
+        mergeMap((action:ProductsActions)=>{
+            return this.productsService.update(action.payload)
+            .pipe(
+                map((product)=> new UpdateProductActionSuccess(product)),
+                catchError((err)=>of(new UpdateProductActionError(err.message)))
             )
         })
     ));
